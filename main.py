@@ -76,6 +76,7 @@ class App:
                 self.y += 3
         if self.y == 90:
             self.sol = 90
+            toto
 
     def epee_creation(self):
 
