@@ -6,7 +6,7 @@ import time
 class App:
     def __init__(self):
         pyxel.init(128, 128, "PYXEL1", 30)
-        #pyxel.load("my_resource/music0")
+        pyxel.load("my_resource/music0")
         self.x = 60
         self.y = 100
         self.direction = None
@@ -101,7 +101,9 @@ class App:
                       self.niveau3, self.niveau4, self.niveau5]
         self.numero_niveau = 2
         self.niveau = self.niveau3
-
+        self.music=True
+        if self.music==True :
+            pyxel.playm(0,loop=True)
         pyxel.run(self.update, self.draw)
 
     # and self.x+2>collision[0] and self.y>collision[1] and self.x+2>collision[2] and self.y<collision[3] and self.x+2>collision[4] and self.y>collision[5] and self.x+2>collision[6] and self.y<collision[7]
