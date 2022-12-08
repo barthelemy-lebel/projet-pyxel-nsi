@@ -6,21 +6,22 @@ import time
 class App:
     def __init__(self):
         pyxel.init(128, 128, "PYXEL1", 30)
-        pyxel.load("my_resource/music0")
+        pyxel.load("my_resource.pyxres")
         self.x = 60
         self.y = 100
         self.direction = None
         self.saut = False
         self.c_saut = 0
-        self.sol = self.y+8
+        self.sol = self.y + 8
         self.tirs = []
+        self.tirs_ennemi = []
         self.g_tirs = []  # gros tirs
         self.g_charge = 0  # chrono de frames avant que les tirs chargés soient chargés
         self.epee = [False, 0]
         self.ennemis_niveau1 = []
         self.ennemis_niveau2 = []
         self.ennemis_niveau4 = []
-        self.ennemis=[self.ennemis_niveau1,self.ennemis_niveau2,self.ennemis_niveau4]
+        self.ennemis = [self.ennemis_niveau1, self.ennemis_niveau2, self.ennemis_niveau4]
         self.explosions = []
         self.g_explosions = []
         self.boum_ok = []
@@ -31,12 +32,8 @@ class App:
         self.zone = 1  # stocke le numéro du niveau
         # compteur d'ennemis morts // à réinitianliser à chaque changement de niveau normalement
         self.ennemi_ded = 0
-        self.music = True
-        if self.music:
-            pyxel.playm(0, loop=True)
-            
-            
-        self.hell_niveau1=[[112,60],[100,104]]
+
+        self.hell_niveau1 = [[112, 60], [100, 104]]
 
         self.niveau1 = [[0, 0, 108, 8, 5],  # bord Haut
                         [0, 8, 8, 120, 5],  # bord Gauche
@@ -101,9 +98,9 @@ class App:
                       self.niveau3, self.niveau4, self.niveau5]
         self.numero_niveau = 2
         self.niveau = self.niveau3
-        self.music=True
-        if self.music==True :
-            pyxel.playm(0,loop=True)
+        self.music = True
+        if self.music == True:
+            pyxel.playm(0, loop=True)
         pyxel.run(self.update, self.draw)
 
     # and self.x+2>collision[0] and self.y>collision[1] and self.x+2>collision[2] and self.y<collision[3] and self.x+2>collision[4] and self.y>collision[5] and self.x+2>collision[6] and self.y<collision[7]
@@ -141,11 +138,11 @@ class App:
                 y_augmentation = 0
 
             elif collision[1] <= self.y and self.y + 8 <= collision[3] and collision[
-                    2] == self.x and self.x + x_augmentation < collision[2]:
+                2] == self.x and self.x + x_augmentation < collision[2]:
                 x_augmentation = 0
 
             elif collision[1] <= self.y and self.y + 8 <= collision[3] and collision[
-                    0] == self.x + 8 and self.x + 8 + x_augmentation > collision[0]:
+                0] == self.x + 8 and self.x + 8 + x_augmentation > collision[0]:
                 x_augmentation = 0
 
         self.x += x_augmentation
@@ -286,13 +283,13 @@ class App:
             for i in range(3):
                 for collision in self.niveau:
                     if collision[0] <= self.x <= collision[2] and collision[1] == self.y + 8 or collision[
-                            0] <= self.x + 8 <= collision[2] and collision[1] == self.y + 8:
+                        0] <= self.x + 8 <= collision[2] and collision[1] == self.y + 8:
                         self.sol = collision[1] - 8
                         ok = False
 
                 if ok == True:
                     self.y += 1
-                    
+
     def tirs_creation(self):
         """
         sel.tirs (lst) contient des listes contenant [absisce tir, ordonnée tir, bool droite, bool haut, ???keskejaifoutu]
@@ -347,13 +344,24 @@ class App:
                 if g[0] <= 0:
                     self.g_tirs.remove(g)
 
+    def tirs_ennemis_deplacement(self):
+        """
+        comme pour les déplacements des tirs mais avec la liste de tirs_ennemis
+        """
+        for tir in self.tirs_ennemi:
+            if tir[2]==False:
+                tir[0] -= 2
+                if tir[0] > 128:
+                    self.tirs_ennemi.remove(tir)
+            elif tir[2]==True:
+                tir[0] += 2
+                if tir[0] < 0:
+                    self.tirs_ennemi.remove(tir)
+
     def tirs_collision(self, tir, x_augmentation, y_augmentation):
         for collision in self.niveau:
             if abs(collision[1] - collision[3]) == 8:
-
                 d = 1
-
-            
 
             if collision[0] <= tir[0] <= collision[2] and collision[3] == tir[1] + y_augmentation:
                 y_augmentation = 0
@@ -363,17 +371,19 @@ class App:
                 y_augmentation = 0
                 self.tirs.remove(tir)
 
-            elif collision[1] <= tir[1] and tir[1] + 8 <= collision[3] and collision[2] == tir[0] and tir[0] + x_augmentation <= collision[2]:
+            elif collision[1] <= tir[1] and tir[1] + 8 <= collision[3] and collision[2] == tir[0] and tir[
+                0] + x_augmentation <= collision[2]:
                 x_augmentation = 0
                 self.tirs.remove(tir)
 
-            elif collision[1] <= tir[1] and tir[1] <= collision[3] and collision[0] == tir[0] + 8 and tir[0] + 8 + x_augmentation >= collision[0]:
+            elif collision[1] <= tir[1] and tir[1] <= collision[3] and collision[0] == tir[0] + 8 and tir[
+                0] + 8 + x_augmentation >= collision[0]:
                 x_augmentation = 0
                 self.tirs.remove(tir)
-                
+
         tir[0] += x_augmentation
         tir[1] += y_augmentation
-        
+
     def gros_tirs_creation(self):
         """ajout dans self.g_tirs des tirs chargés
         """
@@ -425,7 +435,8 @@ class App:
                                 self.g_tirs.remove(g)
 
                     elif g[3] == True:
-                        if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[1] - 4:
+                        if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[
+                            1] - 4:
                             self.boum_ok.append([g[0], g[1]])
                             if g in self.g_tirs:
                                 self.g_tirs.remove(g)
@@ -442,19 +453,20 @@ class App:
                                 self.tirs.remove(tir)
 
                     elif tir[3] == True:
-                        if ennemi[0] <= tir[0] and ennemi[0] + 7 >= tir[0] and ennemi[1] + 8 >= tir[1] and ennemi[1] <= tir[
-                                1] - 4:
+                        if ennemi[0] <= tir[0] and ennemi[0] + 7 >= tir[0] and ennemi[1] + 8 >= tir[1] and ennemi[1] <= \
+                                tir[
+                                    1] - 4:
                             ennemi[2] -= 1
                             ennemi[4] = True
                             if tir in self.tirs:
                                 self.tirs.remove(tir)
-        
+
             for ennemi in self.ennemis[i]:
 
                 if self.epee[1] != 0:
                     if self.haut == True:
                         if ennemi[0] >= self.x - 7 and ennemi[0] <= self.x + 14 and ennemi[1] >= self.y - 20 and ennemi[
-                                1] <= self.y - 8:
+                            1] <= self.y - 8:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 1
@@ -462,7 +474,7 @@ class App:
 
                     elif self.droite == False:
                         if ennemi[0] >= self.x - 16 and ennemi[0] <= self.x and ennemi[1] >= self.y - 5 and ennemi[
-                                1] <= self.y + 13:
+                            1] <= self.y + 13:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 3
@@ -470,7 +482,7 @@ class App:
 
                     else:
                         if ennemi[0] >= self.x and ennemi[0] <= self.x + 16 and ennemi[1] >= self.y - 5 and ennemi[
-                                1] <= self.y + 13:
+                            1] <= self.y + 13:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 3
@@ -480,13 +492,20 @@ class App:
                 else:
                     ennemi[9] = 0
 
+    def collision_tirs_ennemis(self):
+        for tir in self.tirs_ennemi:
+            if self.x <= tir[0] + 4 and self.x >= tir[0] -4 and self.y >= tir[1] - 8 and self.y <= tir[1]:
+                self.vies -= 1
+                self.touche = True
+                if tir in self.tirs_ennemi:
+                    self.tirs_ennemi.remove(tir)
+
     def collisions_perso(self):
         self.touche = False
-         
+
         for i in range(len(self.ennemis)):
             for ennemi in self.ennemis[i]:
-                if self.y <= ennemi[1] + 8 and self.y >= ennemi[1] - 8 and self.x <= ennemi[0] + 8 and self.x + 8 >= ennemi[
-                        0]:
+                if self.y <= ennemi[1] + 8 and self.y >= ennemi[1] - 8 and self.x <= ennemi[0] + 8 and self.x + 8 >= ennemi[0]:
                     if self.epee[1] > 15 or self.epee[1] == 0:
                         self.ennemis[i].remove(ennemi)
                         self.vies -= 1
@@ -532,37 +551,30 @@ class App:
     def ennemi_deplacement(self):
         for i in range(len(self.ennemis)):
             for ennemi in self.ennemis[i]:
-                dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau)
-
-                ennemi[0] = dep_en.deplacement_horizontal()
+                dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau1)
+                ennemi[0] = dep_en.deplacement_horizontal()[0]
                 ennemi[1] = dep_en.deplacement_vertical()
+                if dep_en.deplacement_horizontal()[1] == True:
+                    attaque = Attaques_ennemi(ennemi, self.x, self.y)
+                    tir_temp = attaque.tirs_crea()
+                    if tir_temp != None:
+                        self.tirs_ennemi.append(tir_temp)
 
     def creation_ennemi(self):
 
-        if self.numero_niveau == 0 :
+        if self.numero_niveau == 0:
             en1 = Ennemi(112, 104, 4, 30, 92, 112, False, "foot")
-            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "foot")
+            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "foot ")
             self.ennemis_niveau1.append(en1.ennemis_creation())
             self.ennemis_niveau1.append(en2.ennemis_creation())
-            
-        if self.numero_niveau == 1 :
-            en1 = Ennemi(112, 108, 4, 30, 0, 112, False, "foot")
+
+        if self.numero_niveau == 1:
+            en1 = Ennemi(112, 108, 4, 30, 0, 112, False, "shooter")
             self.ennemis_niveau2.append(en1.ennemis_creation())
-        
-        if self.numero_niveau == 3 :
-            en1 = Ennemi(8, 40, 4, 30, 92, 112, True, "foot")
+
+        if self.numero_niveau == 3:
+            en1 = Ennemi(8, 40, 4, 30, 92, 112, True, "shooter")
             self.ennemis_niveau4.append(en1.ennemis_creation())
-            
-            
-        
-            
-            
-        
-            
-            
-        
-            
-        
 
     def boum(self):
         """
@@ -600,16 +612,18 @@ class App:
         self.epee_creation()
         self.gros_tirs_creation()
         self.collisions_tirs()
+        self.collision_tirs_ennemis()
         self.collisions_perso()
         self.explosion_deplacement()
         self.g_explosion_deplacement()  # à encore créer
-        self.ennemi_deplacement()
         self.creation_ennemi()
+        self.ennemi_deplacement()
+        self.tirs_ennemis_deplacement()
         self.mort_ennemi()
         self.boum()
 
     def draw(self):
-        
+
         pyxel.cls(0)
         # draw box
         for col in self.niveau:
@@ -622,6 +636,11 @@ class App:
                 pyxel.rect(tir[0], tir[1], 4, 1, 10)
             else:
                 pyxel.rect(tir[0], tir[1] - 2, 1, 4, 10)
+
+        # draw tirs ennemi
+        for tir in self.tirs_ennemi:
+            if self.tirs_ennemi != None:
+                pyxel.rect(tir[0], tir[1], 4, 1, 12)
 
         # draw tirs chargés
         for g in self.g_tirs:
@@ -647,30 +666,28 @@ class App:
             pyxel.rect(self.x, self.y, 8, 8, 8)
 
         # draw mobs
-        if self.numero_niveau==0:
+        if self.numero_niveau == 0:
             for ennemi in self.ennemis[0]:
                 if ennemi[4] == False:
                     pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
                 elif ennemi[4] == True:
                     pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
-                    
-        if self.numero_niveau==1:
+
+        if self.numero_niveau == 1:
             for ennemi in self.ennemis[1]:
                 if ennemi[4] == False:
                     pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
                 elif ennemi[4] == True:
                     pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
 
-
-        if self.numero_niveau==3:
+        if self.numero_niveau == 3:
             for ennemi in self.ennemis[2]:
                 if ennemi[4] == False:
                     pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
                 elif ennemi[4] == True:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)                    
-        
+                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
 
-        # draw explosion
+                    # draw explosion
         for explosion in self.explosions:
             pyxel.circb(explosion[0] + 4, explosion[1] + 4,
                         2 * (explosion[2] // 4), 8 + explosion[2] % 3)
@@ -720,14 +737,12 @@ class Deplacement_ennemi:
         ok=2 veut dire gauche
         """
         ok = 0
-        if self.x > (self.ennemi[0] - self.ennemi[3]) and self.x + 8 < self.ennemi[0] and self.y > self.ennemi[
-                1] - 12 and self.y < self.ennemi[1] + 20:
+        if self.x > (self.ennemi[0] - self.ennemi[3]) and self.x + 8 < self.ennemi[0] and self.y > self.ennemi[1] - 12 and self.y < self.ennemi[1] + 20:
             ok = 2
             for col in self.collisions:
                 if self.ennemi[0] == col[2] and self.ennemi[1] + 8 > col[3] and self.ennemi[1] < col[1]:
                     ok = 0
-        elif self.x < (self.ennemi[0] + 8 + self.ennemi[3]) and self.x > self.ennemi[0] + 8 and self.y > self.ennemi[
-                1] - 12 and self.y < self.ennemi[1] + 20:
+        elif self.x < (self.ennemi[0] + 8 + self.ennemi[3]) and self.x > self.ennemi[0] + 8 and self.y > self.ennemi[1] - 12 and self.y < self.ennemi[1] + 20:
             ok = 1
             for col in self.collisions:
                 if self.ennemi[0] + 8 == col[0] and self.ennemi[1] + 8 >= col[3] and self.ennemi[1] <= col[1] and \
@@ -742,14 +757,14 @@ class Deplacement_ennemi:
         """
         ok = self.agro()
         if ok == 0:
-            return self.deplacement_horizontal_defaut()
+            return self.deplacement_horizontal_defaut(), False
         if self.ennemi[8] == "foot":
             if ok == 2:
-                return self.ennemi[0] - 1
+                return self.ennemi[0] - 1, False
             elif ok == 1:
-                return self.ennemi[0] + 1
+                return self.ennemi[0] + 1, False
         elif self.ennemi[8] == "shooter":
-            return self.ennemi[0]
+            return self.ennemi[0], True
 
     def deplacement_horizontal_defaut(self):
         """ self.ennemi[7] = True veut dire que la direction de l'ennemi est la droite
@@ -767,7 +782,7 @@ class Deplacement_ennemi:
                 return self.ennemi[0]
             # test collision à gauche
             if self.ennemi[0] == col[2] and self.ennemi[1] + 8 > col[3] and self.ennemi[1] < col[1] and self.ennemi[
-                    7] == True:
+                7] == True:
                 return self.ennemi[0]
 
         if pyxel.frame_count % 5 == 0:
@@ -796,6 +811,31 @@ class Deplacement_ennemi:
             return self.ennemi[1] + 1
         else:
             return self.ennemi[1]
+
+
+class Attaques_ennemi:
+    def __init__(self, ennemi, x, y):
+        self.ennemi = ennemi
+        self.x = x
+        self.y = y
+
+    def direction_tirs(self):
+        """
+        self.ennemi[7] = False : l'ennemi est à gauche
+        self.ennemi[7] = True : l'ennemi est à droite
+        """
+        if self.x > (self.ennemi[0] - self.ennemi[3]) and self.x + 8 < self.ennemi[0] and self.y > self.ennemi[1] - 12 and self.y < self.ennemi[1] + 20:
+            self.ennemi[7]=False
+        elif self.x < (self.ennemi[0] + 8 + self.ennemi[3]) and self.x > self.ennemi[0] + 8 and self.y > self.ennemi[1] - 12 and self.y < self.ennemi[1] + 20:
+            self.ennemi[7]=True
+
+    def tirs_crea(self):
+        self.direction_tirs()
+        if pyxel.frame_count % 10== 0:
+            if self.ennemi[7]==True:
+                return [self.ennemi[0] + 8, self.ennemi[1] + 4, self.ennemi[7], False, False]
+            elif self.ennemi[7]==False:
+                return [self.ennemi[0] - 4, self.ennemi[1] + 4, self.ennemi[7], False, False]
 
 
 App()
