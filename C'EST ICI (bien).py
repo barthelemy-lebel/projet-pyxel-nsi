@@ -6,6 +6,7 @@ import time
 class App:
     def __init__(self):
         pyxel.init(128, 128, "PYXEL1", 30)
+        pyxel.load("my_ressource.pyxres")
         self.x = 60
         self.y = 100
         self.direction = None
