@@ -595,22 +595,18 @@ class App:
         test de collision avec une box de 34 pixel de côté autour du tir
         si l'ennemi est dedans, on l'enlève de la liste et on appelle les fonctions d'explosion
         """
-
         i = 0
         if self.boum_ok != []:
-
-            while i < len(self.ennemis):
-                if self.ennemis[i][0] >= self.boum_ok[0][0] - 15 and self.ennemis[i][0] <= self.boum_ok[0][0] + 15 and \
-                        self.ennemis[i][1] \
-                        <= self.boum_ok[0][1] + 15 and self.ennemis[i][1] >= self.boum_ok[0][1] - 15:
-                    self.ennemis[i][2] -= 3
-                    self.ennemis[i][4] = True
-                    if self.ennemis[i][2] != 0:
+            while i < len(self.ennemis[self.numero_niveau]):
+                if self.ennemis[self.numero_niveau][i][0] >= self.boum_ok[0][0] - 15 and self.ennemis[self.numero_niveau][i][0] <= self.boum_ok[0][0] + 15 and \
+                        self.ennemis[self.numero_niveau][i][1] \
+                        <= self.boum_ok[0][1] + 15 and self.ennemis[self.numero_niveau][i][1] >= self.boum_ok[0][1] - 15:
+                    self.ennemis[self.numero_niveau][i][2] -= 3
+                    self.ennemis[self.numero_niveau][i][4] = True
+                    if self.ennemis[self.numero_niveau][i][2] != 0:
                         i += 1
-
                 else:
                     i += 1
-
         self.boum_ok = []
 
     def update(self):
