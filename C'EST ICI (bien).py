@@ -6,7 +6,6 @@ import time
 class App:
     def __init__(self):
         pyxel.init(128, 128, "PYXEL1", 30)
-        pyxel.load("my_resource.pyxres")
         self.x = 60
         self.y = 100
         self.direction = None
@@ -411,6 +410,7 @@ class App:
                 if ennemi[2] <= 0:
                     self.explosion_creation(ennemi)
                     self.ennemis[i].remove(ennemi)
+                    self.enemi_ded +=1
 
     def collisions_tirs(self):
         """
@@ -552,27 +552,30 @@ class App:
         for i in range(len(self.ennemis)):
             for ennemi in self.ennemis[i]:
                 dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau1)
-                ennemi[0] = dep_en.deplacement_horizontal()[0]
+                if dep_en.deplacement_horizontal() != None:
+                    ennemi[0] = dep_en.deplacement_horizontal()[0]
                 ennemi[1] = dep_en.deplacement_vertical()
-                if dep_en.deplacement_horizontal()[1] == True:
-                    attaque = Attaques_ennemi(ennemi, self.x, self.y)
-                    tir_temp = attaque.tirs_crea()
-                    if tir_temp != None:
-                        self.tirs_ennemi.append(tir_temp)
+                if dep_en.deplacement_horizontal() != None:
+                    if dep_en.deplacement_horizontal()[1] == True:
+                        attaque = Attaques_ennemi(ennemi, self.x, self.y)
+                        tir_temp = attaque.tirs_crea()
+                        if tir_temp != None:
+                            self.tirs_ennemi.append(tir_temp)
 
     def creation_ennemi(self):
+        print(self.ennemis)
 
-        if self.numero_niveau == 0:
+        if self.numero_niveau == 0 and len(self.ennemis[self.numero_niveau]) <= 2:
             en1 = Ennemi(112, 104, 4, 30, 92, 112, False, "foot")
             en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "foot ")
             self.ennemis_niveau1.append(en1.ennemis_creation())
             self.ennemis_niveau1.append(en2.ennemis_creation())
 
-        if self.numero_niveau == 1:
+        if self.numero_niveau == 1 and  len(self.ennemis[self.numero_niveau]) <= 2:
             en1 = Ennemi(112, 108, 4, 30, 0, 112, False, "shooter")
             self.ennemis_niveau2.append(en1.ennemis_creation())
 
-        if self.numero_niveau == 3:
+        if self.numero_niveau == 3 and  len(self.ennemis[self.numero_niveau]) <= 2:
             en1 = Ennemi(8, 40, 4, 30, 92, 112, True, "shooter")
             self.ennemis_niveau4.append(en1.ennemis_creation())
 
