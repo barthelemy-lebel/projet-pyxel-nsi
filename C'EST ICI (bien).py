@@ -21,7 +21,8 @@ class App:
         self.ennemis_niveau2 = []
         self.ennemis_niveau3 = []
         self.ennemis_niveau4 = []
-        self.ennemis = [self.ennemis_niveau1, self.ennemis_niveau2, self.ennemis_niveau3, self.ennemis_niveau4]
+        self.ennemis_niveau5 = []
+        self.ennemis = [self.ennemis_niveau1, self.ennemis_niveau2, self.ennemis_niveau3, self.ennemis_niveau4, self.ennemis_niveau5]
         self.explosions = []
         self.g_explosions = []
         self.boum_ok = []
@@ -558,18 +559,18 @@ class App:
                 self.g_explosions.remove(g_exp)
 
     def ennemi_deplacement(self):
-        for i in range(len(self.ennemis)):
-            for ennemi in self.ennemis[i]:
-                dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau1)
-                if dep_en.deplacement_horizontal() != None:
-                    ennemi[0] = dep_en.deplacement_horizontal()[0]
-                ennemi[1] = dep_en.deplacement_vertical()
-                if dep_en.deplacement_horizontal() != None:
-                    if dep_en.deplacement_horizontal()[1] == True:
-                        attaque = Attaques_ennemi(ennemi, self.x, self.y)
-                        tir_temp = attaque.tirs_crea()
-                        if tir_temp != None:
-                            self.tirs_ennemi.append(tir_temp)
+
+        for ennemi in self.ennemis[self.numero_niveau]:
+            dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau1)
+            if dep_en.deplacement_horizontal() != None:
+                ennemi[0] = dep_en.deplacement_horizontal()[0]
+            ennemi[1] = dep_en.deplacement_vertical()
+            if dep_en.deplacement_horizontal() != None:
+                if dep_en.deplacement_horizontal()[1] == True:
+                    attaque = Attaques_ennemi(ennemi, self.x, self.y)
+                    tir_temp = attaque.tirs_crea()
+                    if tir_temp != None:
+                        self.tirs_ennemi.append(tir_temp)
 
     def creation_ennemi(self):
 
@@ -673,26 +674,12 @@ class App:
             pyxel.rect(self.x, self.y, 8, 8, 8)
 
         # draw mobs
-        if self.numero_niveau == 0:
-            for ennemi in self.ennemis[0]:
-                if ennemi[4] == False:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
-                elif ennemi[4] == True:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
 
-        if self.numero_niveau == 1:
-            for ennemi in self.ennemis[1]:
-                if ennemi[4] == False:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
-                elif ennemi[4] == True:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
-
-        if self.numero_niveau == 3:
-            for ennemi in self.ennemis[2]:
-                if ennemi[4] == False:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
-                elif ennemi[4] == True:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
+        for ennemi in self.ennemis[self.numero_niveau]:
+            if ennemi[4] == False:
+                pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
+            elif ennemi[4] == True:
+                pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
 
                     # draw explosion
         for explosion in self.explosions:
