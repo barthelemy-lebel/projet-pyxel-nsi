@@ -19,8 +19,9 @@ class App:
         self.epee = [False, 0]
         self.ennemis_niveau1 = []
         self.ennemis_niveau2 = []
+        self.ennemis_niveau3 = []
         self.ennemis_niveau4 = []
-        self.ennemis = [self.ennemis_niveau1, self.ennemis_niveau2, self.ennemis_niveau4]
+        self.ennemis = [self.ennemis_niveau1, self.ennemis_niveau2, self.ennemis_niveau3, self.ennemis_niveau4]
         self.explosions = []
         self.g_explosions = []
         self.boum_ok = []
@@ -153,6 +154,7 @@ class App:
             self.y = 100
             self.numero_niveau += 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 2 -> 1
         elif self.x <= -8 and self.y >= 112 and self.numero_niveau == 1:
@@ -160,6 +162,7 @@ class App:
             self.y = 8
             self.numero_niveau -= 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 2 -> 3
         elif self.x <= -8 and self.y <= 10 and self.numero_niveau == 1:
@@ -167,6 +170,7 @@ class App:
             self.y = 100
             self.numero_niveau += 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 3 -> 2
         elif self.x >= 128 and self.y >= 128 and self.numero_niveau == 2:
@@ -174,6 +178,7 @@ class App:
             self.y = 8
             self.numero_niveau -= 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 3 -> 4
         elif self.x < -8 and self.y <= 10 and self.numero_niveau == 2:
@@ -181,6 +186,7 @@ class App:
             self.y = 100
             self.numero_niveau += 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 4 -> 3
         elif 60 <= self.x <= 76 and self.y >= 128 and self.numero_niveau == 3:
@@ -188,6 +194,7 @@ class App:
             self.y = 0
             self.numero_niveau -= 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 4 -> 5
         elif self.x >= 128 and self.y >= 10 and self.numero_niveau == 3:
@@ -195,6 +202,7 @@ class App:
             self.y = 30
             self.numero_niveau += 1
             self.saut = False
+            self.ennemi_ded = 0
 
         # passage 5 -> 4
         elif self.x < -8 and self.y >= 30 and self.numero_niveau == 4:
@@ -202,6 +210,7 @@ class App:
             self.y = 8
             self.numero_niveau -= 1
             self.saut = False
+            self.ennemi_ded = 0
 
         self.niveau = self.level[self.numero_niveau]
 
@@ -410,7 +419,7 @@ class App:
                 if ennemi[2] <= 0:
                     self.explosion_creation(ennemi)
                     self.ennemis[i].remove(ennemi)
-                    self.enemi_ded +=1
+                    self.ennemi_ded +=1
 
     def collisions_tirs(self):
         """
@@ -563,19 +572,18 @@ class App:
                             self.tirs_ennemi.append(tir_temp)
 
     def creation_ennemi(self):
-        print(self.ennemis)
 
-        if self.numero_niveau == 0 and len(self.ennemis[self.numero_niveau]) <= 2:
+        if self.numero_niveau == 0 and len(self.ennemis[self.numero_niveau]) + self.ennemi_ded <= 2:
             en1 = Ennemi(112, 104, 4, 30, 92, 112, False, "foot")
-            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "foot ")
+            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "shoot ")
             self.ennemis_niveau1.append(en1.ennemis_creation())
             self.ennemis_niveau1.append(en2.ennemis_creation())
 
-        if self.numero_niveau == 1 and  len(self.ennemis[self.numero_niveau]) <= 2:
+        if self.numero_niveau == 1 and  len(self.ennemis[self.numero_niveau]) + self.ennemi_ded<= 2:
             en1 = Ennemi(112, 108, 4, 30, 0, 112, False, "shooter")
             self.ennemis_niveau2.append(en1.ennemis_creation())
 
-        if self.numero_niveau == 3 and  len(self.ennemis[self.numero_niveau]) <= 2:
+        if self.numero_niveau == 3 and  len(self.ennemis[self.numero_niveau]) + self.ennemi_ded<= 2:
             en1 = Ennemi(8, 40, 4, 30, 92, 112, True, "shooter")
             self.ennemis_niveau4.append(en1.ennemis_creation())
 
