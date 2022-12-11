@@ -6,7 +6,7 @@ import time
 class App:
     def __init__(self):
         pyxel.init(128, 128, "PYXEL1", 30)
-        pyxel.load("my_ressource.pyxres")
+        pyxel.load("my_resource.pyxres")
         self.x = 60
         self.y = 100
         self.direction = None
@@ -100,7 +100,7 @@ class App:
                       self.niveau3, self.niveau4, self.niveau5]
         self.numero_niveau = 2
         self.niveau = self.niveau3
-        self.music = True
+        self.music = False
         if self.music == True:
             pyxel.playm(0, loop=True)
         pyxel.run(self.update, self.draw)
@@ -328,15 +328,15 @@ class App:
         """
         for tir in self.tirs:
             if tir[3] == True:
-                self.tirs_collision(tir, 0, -2)
+                self.tirs_collision_murs(tir, 0, -2)
                 if tir[1] <= 8:
                     self.tirs.remove(tir)
             elif tir[2] == False:
-                self.tirs_collision(tir, -2, 0)
+                self.tirs_collision_murs(tir, -2, 0)
                 if tir[0] > 120:
                     self.tirs.remove(tir)
             else:
-                self.tirs_collision(tir, 2, 0)
+                self.tirs_collision_murs(tir, 2, 0)
                 if tir[0] < 0:
                     self.tirs.remove(tir)
 
@@ -368,7 +368,7 @@ class App:
                 if tir[0] < 0:
                     self.tirs_ennemi.remove(tir)
 
-    def tirs_collision(self, tir, x_augmentation, y_augmentation):
+    def tirs_collision_murs(self, tir, x_augmentation, y_augmentation):
         for collision in self.niveau:
             if abs(collision[1] - collision[3]) == 8:
                 d = 1
@@ -434,66 +434,59 @@ class App:
         dans le cas des tirs g, on met juste à jour self.boum_ok avec les coordonnées du tir qui va générer l'explosion)
         """
         ok_epee = False
-        for i in range(len(self.ennemis)):
-            for ennemi in self.ennemis[i]:
-                ennemi[4] = False
-            for g in self.g_tirs:
-                for ennemi in self.ennemis[i]:
-                    if g[3] == False:
-                        if ennemi[0] <= g[0] + 12 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
-                            self.boum_ok.append([g[0], g[1]])
-                            if g in self.g_tirs:
-                                self.g_tirs.remove(g)
 
-                    elif g[3] == True:
-                        if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[
-                            1] - 4:
-                            self.boum_ok.append([g[0], g[1]])
-                            if g in self.g_tirs:
-                                self.g_tirs.remove(g)
+        for ennemi in self.ennemis[self.numero_niveau]:
+            ennemi[4] = False
+        for g in self.g_tirs:
+            for ennemi in self.ennemis[self.numero_niveau]:
+                if g[3] == False:
+                    if ennemi[0] <= g[0] + 12 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
+                        self.boum_ok.append([g[0], g[1]])
+                        if g in self.g_tirs:
+                            self.g_tirs.remove(g)
+
+                elif g[3] == True:
+                    if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[1] - 4:
+                        self.boum_ok.append([g[0], g[1]])
+                        if g in self.g_tirs:
+                            self.g_tirs.remove(g)
 
             for tir in self.tirs:
-                for ennemi in self.ennemis[i]:
+                for ennemi in self.ennemis[self.numero_niveau]:
                     ennemi[4] = False
                     if tir[3] == False:
-                        if ennemi[0] <= tir[0] + 12 and ennemi[0] >= tir[0] and ennemi[1] >= tir[1] - 8 and ennemi[1] <= \
-                                tir[1]:
+                        if ennemi[0] <= tir[0] + 12 and ennemi[0] >= tir[0] and ennemi[1] >= tir[1] - 8 and ennemi[1] <= tir[1]:
                             ennemi[2] -= 1
                             ennemi[4] = True
                             if tir in self.tirs:
                                 self.tirs.remove(tir)
 
                     elif tir[3] == True:
-                        if ennemi[0] <= tir[0] and ennemi[0] + 7 >= tir[0] and ennemi[1] + 8 >= tir[1] and ennemi[1] <= \
-                                tir[
-                                    1] - 4:
+                        if ennemi[0] <= tir[0] and ennemi[0] + 7 >= tir[0] and ennemi[1] + 8 >= tir[1] and ennemi[1] <= tir[1] - 4:
                             ennemi[2] -= 1
                             ennemi[4] = True
                             if tir in self.tirs:
                                 self.tirs.remove(tir)
 
-            for ennemi in self.ennemis[i]:
+            for ennemi in self.ennemis[self.numero_niveau]:
 
                 if self.epee[1] != 0:
                     if self.haut == True:
-                        if ennemi[0] >= self.x - 7 and ennemi[0] <= self.x + 14 and ennemi[1] >= self.y - 20 and ennemi[
-                            1] <= self.y - 8:
+                        if ennemi[0] >= self.x - 7 and ennemi[0] <= self.x + 14 and ennemi[1] >= self.y - 20 and ennemi[1] <= self.y - 8:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 1
                                 ennemi[4] = True
 
                     elif self.droite == False:
-                        if ennemi[0] >= self.x - 16 and ennemi[0] <= self.x and ennemi[1] >= self.y - 5 and ennemi[
-                            1] <= self.y + 13:
+                        if ennemi[0] >= self.x - 16 and ennemi[0] <= self.x and ennemi[1] >= self.y - 5 and ennemi[1] <= self.y + 13:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 3
                                 ennemi[4] = True
 
                     else:
-                        if ennemi[0] >= self.x and ennemi[0] <= self.x + 16 and ennemi[1] >= self.y - 5 and ennemi[
-                            1] <= self.y + 13:
+                        if ennemi[0] >= self.x and ennemi[0] <= self.x + 16 and ennemi[1] >= self.y - 5 and ennemi[1] <= self.y + 13:
                             ok_epee = True
                             if ennemi[9] == 0:
                                 ennemi[2] -= 3
@@ -514,14 +507,13 @@ class App:
     def collisions_perso(self):
         self.touche = False
 
-        for i in range(len(self.ennemis)):
-            for ennemi in self.ennemis[i]:
-                if self.y <= ennemi[1] + 8 and self.y >= ennemi[1] - 8 and self.x <= ennemi[0] + 8 and self.x + 8 >= ennemi[0]:
-                    if self.epee[1] > 15 or self.epee[1] == 0:
-                        self.ennemis[i].remove(ennemi)
-                        self.vies -= 1
-                        self.ennemi_ded += 1
-                        self.touche = True
+        for ennemi in self.ennemis[self.numero_niveau]:
+            if self.y <= ennemi[1] + 8 and self.y >= ennemi[1] - 8 and self.x <= ennemi[0] + 8 and self.x + 8 >= ennemi[0]:
+                if self.epee[1] > 15 or self.epee[1] == 0:
+                    self.ennemis[self.numero_niveau].remove(ennemi)
+                    self.vies -= 1
+                    self.ennemi_ded += 1
+                    self.touche = True
 
         for h in self.heal:
             if self.y <= h[1] + 8 and self.y >= h[1] - 8 and self.x <= h[0] + 8 and self.x + 8 >= h[0]:
