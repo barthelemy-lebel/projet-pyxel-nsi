@@ -554,7 +554,7 @@ class App:
     def ennemi_deplacement(self):
 
         for ennemi in self.ennemis[self.numero_niveau]:
-            dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau1)
+            dep_en = Deplacement_ennemi(ennemi, self.x, self.y, self.niveau)
             if dep_en.deplacement_horizontal() != None:
                 ennemi[0] = dep_en.deplacement_horizontal()[0]
             ennemi[1] = dep_en.deplacement_vertical()
