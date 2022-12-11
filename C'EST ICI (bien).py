@@ -311,10 +311,10 @@ class App:
                     [self.x + 4, self.y, self.droite, self.haut, False])
             elif self.droite == True:
                 self.tirs.append(
-                    [self.x + 8, self.y + 4, self.droite, self.haut, False])
+                    [self.x + 4, self.y + 4, self.droite, self.haut, False])
             else:
                 self.tirs.append(
-                    [self.x - 4, self.y + 4, self.droite, self.haut, False])
+                    [self.x - 2, self.y + 4, self.droite, self.haut, False])
 
     def tirs_deplacement(self):
         """
@@ -438,7 +438,7 @@ class App:
             for g in self.g_tirs:
                 for ennemi in self.ennemis[self.numero_niveau]:
                     if g[3] == False:
-                        if ennemi[0] <= g[0] + 12 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
+                        if ennemi[0] <= g[0] + 4 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
                             self.boum_ok.append([g[0], g[1]])
                             if g in self.g_tirs:
                                 self.g_tirs.remove(g)
@@ -453,7 +453,7 @@ class App:
                 for ennemi in self.ennemis[self.numero_niveau]:
                     ennemi[4] = False
                     if tir[3] == False:
-                        if ennemi[0] <= tir[0] + 12 and ennemi[0] >= tir[0] and ennemi[1] >= tir[1] - 8 and ennemi[1] <= tir[1]:
+                        if ennemi[0] <= tir[0] + 3 and ennemi[0] >= tir[0] and ennemi[1] >= tir[1] - 8 and ennemi[1] <= tir[1]:
                             ennemi[2] -= 1
                             ennemi[4] = True
                             if tir in self.tirs:
@@ -567,7 +567,7 @@ class App:
 
         if self.numero_niveau == 0 and len(self.ennemis[self.numero_niveau]) + self.ennemi_ded <= 2:
             en1 = Ennemi(112, 104, 4, 30, 92, 112, False, "foot")
-            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "shoot ")
+            en2 = Ennemi(112, 77, 4, 30, 92, 112, False, "shooter")
             self.ennemis_niveau1.append(en1.ennemis_creation())
             self.ennemis_niveau1.append(en2.ennemis_creation())
 
@@ -622,59 +622,67 @@ class App:
         self.boum()
 
     def draw(self):
-
         pyxel.cls(0)
-        # draw box
-        for col in self.niveau:
-            pyxel.rect(col[0], col[1], abs(col[0] - col[2]),
-                       abs(col[1] - col[3]), col[4])
+        if self.vies > 0:
+            # draw box
+            for col in self.niveau:
+                pyxel.rect(col[0], col[1], abs(col[0] - col[2]),
+                           abs(col[1] - col[3]), col[4])
 
-        # draw tir
-        for tir in self.tirs:
-            if tir[3] == False:
-                pyxel.rect(tir[0], tir[1], 4, 1, 10)
+            # draw tir
+            for tir in self.tirs:
+                if tir[3] == False:
+                    pyxel.rect(tir[0], tir[1], 4, 1, 10)
+                else:
+                    pyxel.rect(tir[0], tir[1] - 2, 1, 4, 10)
+
+            # draw tirs ennemi
+            for tir in self.tirs_ennemi:
+                if self.tirs_ennemi != None:
+                    pyxel.rect(tir[0], tir[1], 4, 1, 12)
+
+            # draw tirs chargés
+            for g in self.g_tirs:
+                if g[3] == False:
+                    pyxel.rect(g[0], g[1], 4, 1, 11)
+                else:
+                    pyxel.rect(g[0], g[1] - 2, 1, 4, 11)
+
+            # draw epee
+            if self.epee[1] != 0:
+                if self.haut == True:
+                    pyxel.rect(self.x + 3, self.y - 10, 2, 10, 9)
+
+                elif self.droite == True:
+                    pyxel.rect(self.x + 8, self.y + 3, 8, 2, 9)
+                else:
+                    pyxel.rect(self.x - 8, self.y + 3, 8, 2, 9)
+
+            # draw perso
+            if self.touche == False:
+                pyxel.rect(self.x, self.y, 8, 8, 9)
             else:
-                pyxel.rect(tir[0], tir[1] - 2, 1, 4, 10)
+                pyxel.rect(self.x, self.y, 8, 8, 8)
 
-        # draw tirs ennemi
-        for tir in self.tirs_ennemi:
-            if self.tirs_ennemi != None:
-                pyxel.rect(tir[0], tir[1], 4, 1, 12)
+            # draw mobs
 
-        # draw tirs chargés
-        for g in self.g_tirs:
-            if g[3] == False:
-                pyxel.rect(g[0], g[1], 4, 1, 11)
-            else:
-                pyxel.rect(g[0], g[1] - 2, 1, 4, 11)
+            for ennemi in self.ennemis[self.numero_niveau]:
+                if ennemi[4] == False:
+                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
+                elif ennemi[4] == True:
+                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
 
-        # draw epee
-        if self.epee[1] != 0:
-            if self.haut == True:
-                pyxel.rect(self.x + 3, self.y - 10, 2, 10, 9)
+            # draw explosion
+            for explosion in self.explosions:
+                pyxel.circb(explosion[0] + 4, explosion[1] + 4, 2 * (explosion[2] // 4), 8 + explosion[2] % 3)
 
-            elif self.droite == True:
-                pyxel.rect(self.x + 8, self.y + 3, 8, 2, 9)
-            else:
-                pyxel.rect(self.x - 8, self.y + 3, 8, 2, 9)
+            #affiche la vie
+            pyxel.rect(0,0,30,7, 13)
+            pyxel.text(1, 1, 'VIES:' + str(self.vies), 7)
 
-        # draw perso
-        if self.touche == False:
-            pyxel.rect(self.x, self.y, 8, 8, 9)
-        else:
-            pyxel.rect(self.x, self.y, 8, 8, 8)
-
-        # draw mobs
-
-        for ennemi in self.ennemis[self.numero_niveau]:
-            if ennemi[4] == False:
-                pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
-            elif ennemi[4] == True:
-                pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
-
-                    # draw explosion
-        for explosion in self.explosions:
-            pyxel.circb(explosion[0] + 4, explosion[1] + 4, 2 * (explosion[2] // 4), 8 + explosion[2] % 3)
+        elif self.vies <=0:
+            pyxel.cls(0)
+            pyxel.text(50, 64, 'GAME OVER', 7)
 
 
 class Ennemi:
