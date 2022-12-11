@@ -143,8 +143,7 @@ class App:
                 2] == self.x and self.x + x_augmentation < collision[2]:
                 x_augmentation = 0
 
-            elif collision[1] <= self.y and self.y + 8 <= collision[3] and collision[
-                0] == self.x + 8 and self.x + 8 + x_augmentation > collision[0]:
+            elif collision[1] <= self.y and self.y + 8 <= collision[3] and collision[ 0] == self.x + 8 and self.x + 8 + x_augmentation > collision[0]:
                 x_augmentation = 0
 
         self.x += x_augmentation
@@ -292,8 +291,7 @@ class App:
         if saut == False:
             for i in range(3):
                 for collision in self.niveau:
-                    if collision[0] <= self.x <= collision[2] and collision[1] == self.y + 8 or collision[
-                        0] <= self.x + 8 <= collision[2] and collision[1] == self.y + 8:
+                    if collision[0] <= self.x <= collision[2] and collision[1] == self.y + 8 or collision[0] <= self.x + 8 <= collision[2] and collision[1] == self.y + 8:
                         self.sol = collision[1] - 8
                         ok = False
 
@@ -434,22 +432,22 @@ class App:
         dans le cas des tirs g, on met juste à jour self.boum_ok avec les coordonnées du tir qui va générer l'explosion)
         """
         ok_epee = False
-
-        for ennemi in self.ennemis[self.numero_niveau]:
-            ennemi[4] = False
-        for g in self.g_tirs:
+        for i in range(len(self.ennemis)):
             for ennemi in self.ennemis[self.numero_niveau]:
-                if g[3] == False:
-                    if ennemi[0] <= g[0] + 12 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
-                        self.boum_ok.append([g[0], g[1]])
-                        if g in self.g_tirs:
-                            self.g_tirs.remove(g)
+                ennemi[4] = False
+            for g in self.g_tirs:
+                for ennemi in self.ennemis[self.numero_niveau]:
+                    if g[3] == False:
+                        if ennemi[0] <= g[0] + 12 and ennemi[0] >= g[0] and ennemi[1] >= g[1] - 8 and ennemi[1] <= g[1]:
+                            self.boum_ok.append([g[0], g[1]])
+                            if g in self.g_tirs:
+                                self.g_tirs.remove(g)
 
-                elif g[3] == True:
-                    if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[1] - 4:
-                        self.boum_ok.append([g[0], g[1]])
-                        if g in self.g_tirs:
-                            self.g_tirs.remove(g)
+                    elif g[3] == True:
+                        if ennemi[0] <= g[0] and ennemi[0] + 7 >= g[0] and ennemi[1] + 8 >= g[1] and ennemi[1] <= g[1] - 4:
+                            self.boum_ok.append([g[0], g[1]])
+                            if g in self.g_tirs:
+                                self.g_tirs.remove(g)
 
             for tir in self.tirs:
                 for ennemi in self.ennemis[self.numero_niveau]:
@@ -676,8 +674,7 @@ class App:
 
                     # draw explosion
         for explosion in self.explosions:
-            pyxel.circb(explosion[0] + 4, explosion[1] + 4,
-                        2 * (explosion[2] // 4), 8 + explosion[2] % 3)
+            pyxel.circb(explosion[0] + 4, explosion[1] + 4, 2 * (explosion[2] // 4), 8 + explosion[2] % 3)
 
 
 class Ennemi:
@@ -732,8 +729,7 @@ class Deplacement_ennemi:
         elif self.x < (self.ennemi[0] + 8 + self.ennemi[3]) and self.x > self.ennemi[0] + 8 and self.y > self.ennemi[1] - 12 and self.y < self.ennemi[1] + 20:
             ok = 1
             for col in self.collisions:
-                if self.ennemi[0] + 8 == col[0] and self.ennemi[1] + 8 >= col[3] and self.ennemi[1] <= col[1] and \
-                        self.ennemi[7] == False:
+                if self.ennemi[0] + 8 == col[0] and self.ennemi[1] + 8 >= col[3] and self.ennemi[1] <= col[1] and self.ennemi[7] == False:
                     ok = 0
 
         return ok
@@ -764,12 +760,10 @@ class Deplacement_ennemi:
 
         for col in self.collisions:
             # test collision à droite
-            if self.ennemi[0] + 8 == col[0] and self.ennemi[1] + 8 >= col[3] and self.ennemi[1] <= col[1] and \
-                    self.ennemi[7] == False:
+            if self.ennemi[0] + 8 == col[0] and self.ennemi[1] + 8 >= col[3] and self.ennemi[1] <= col[1] and self.ennemi[7] == False:
                 return self.ennemi[0]
             # test collision à gauche
-            if self.ennemi[0] == col[2] and self.ennemi[1] + 8 > col[3] and self.ennemi[1] < col[1] and self.ennemi[
-                7] == True:
+            if self.ennemi[0] == col[2] and self.ennemi[1] + 8 > col[3] and self.ennemi[1] < col[1] and self.ennemi[7] == True:
                 return self.ennemi[0]
 
         if pyxel.frame_count % 5 == 0:
