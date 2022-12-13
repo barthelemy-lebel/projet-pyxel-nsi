@@ -576,7 +576,7 @@ class App:
             self.ennemis_niveau2.append(en1.ennemis_creation())
 
         if self.numero_niveau == 3 and  len(self.ennemis[self.numero_niveau]) + self.ennemi_ded<= 2:
-            en1 = Ennemi(8, 40, 4, 30, 92, 112, True, "shooter")
+            en1 = Ennemi(8, 40, 4, 30, 20, 50, True, "shooter")
             self.ennemis_niveau4.append(en1.ennemis_creation())
 
     def boum(self):
