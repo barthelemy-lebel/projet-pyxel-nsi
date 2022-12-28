@@ -5,8 +5,9 @@ import time
 
 class App:
     def __init__(self):
-        pyxel.init(128, 128, "PYXEL1", 30)
+        pyxel.init(128, 148, "PYXEL1", 30)
         pyxel.load("my_resource.pyxres")
+        
         self.x = 60
         self.y = 100
         self.direction = None
@@ -36,28 +37,28 @@ class App:
         self.ennemi_ded = 0
 
         self.hell_niveau1 = [[112, 60], [100, 104]]
+        self.niveau1 = [[0, 0, 108, 8, 0],  # bord Haut
+                        [0, 8, 8, 120, 8],  # bord Gauche
+                        [0, 120, 128, 128, 24],  # bord Bas
+                        [120, 16, 128, 128, 16],
+                        # bord droit
+                        [0, 50, 16, 58, 24],
+                        [0,50,8,58,8],
+                        [72, 112, 120, 120, 24],
+                        [40, 40, 120, 48, 24],
+                        [48, 85, 120, 93, 24],
+                        [28, 70, 50, 78, 24]]
 
-        self.niveau1 = [[0, 0, 108, 8, 5],  # bord Haut
-                        [0, 8, 8, 120, 5],  # bord Gauche
-                        [0, 120, 128, 128, 5],  # bord Bas
-                        [120, 16, 128, 128, 5],  # bord droit
-                        [0, 50, 16, 58, 5],
-                        [68, 112, 128, 120, 5],
-                        [40, 40, 120, 48, 5],
-                        [30, 103, 46, 111, 5],
-                        [50, 85, 120, 93, 5],
-                        [28, 70, 50, 78, 5]]
-
-        self.niveau2 = [[24, 0, 128, 8, 7],  # bord Haut
-                        [-8, 16, 8, 110, 7],  # bord Gauche
-                        [0, 120, 128, 128, 7],  # bord Bas
-                        [120, 8, 128, 128, 7],  # bord droit
-                        [50, 50, 80, 58, 7],
-                        [40, 94, 100, 102, 7],
-                        [8, 70, 16, 110, 7],
-                        [70, 8, 90, 24, 7],
-                        [104, 70, 120, 78, 7],
-                        [30, 30, 100, 38, 7]]
+        self.niveau2 = [[24, 0, 128, 8, 56],  # bord Haut
+                        [-8, 16, 8, 110, 48],  # bord Gauche
+                        [0, 120, 128, 128, 32],  # bord Bas
+                        [120, 8, 128, 128, 40],  # bord droit
+                        [50, 50, 80, 58, 64],
+                        [40, 94, 100, 102, 64],
+                        [8, 70, 16, 110, 64],
+                        [70, 8, 90, 24, 64],
+                        [104, 70, 120, 78, 64],
+                        [30, 30, 100, 38, 64]]
 
         self.niveau3 = [[24, 0, 128, 8, 8],  # bord Haut
                         [0, 16, 8, 120, 8],  # bord Gauche
@@ -98,11 +99,13 @@ class App:
 
         self.level = [self.niveau1, self.niveau2,
                       self.niveau3, self.niveau4, self.niveau5]
-        self.numero_niveau = 2
-        self.niveau = self.niveau3
+        self.numero_niveau = 0
+        self.niveau = self.niveau1
         self.music = False
         if self.music == True:
             pyxel.playm(0, loop=True)
+            
+        pyxel.load("my_resource.pyxres")
         pyxel.run(self.update, self.draw)
 
     # and self.x+2>collision[0] and self.y>collision[1] and self.x+2>collision[2] and self.y<collision[3] and self.x+2>collision[4] and self.y>collision[5] and self.x+2>collision[6] and self.y<collision[7]
@@ -214,6 +217,11 @@ class App:
             self.ennemi_ded = 0
 
         self.niveau = self.level[self.numero_niveau]
+        
+        
+    
+        
+            
 
     def deplacement(self):
 
@@ -626,20 +634,25 @@ class App:
         if self.vies > 0:
             # draw box
             for col in self.niveau:
-                pyxel.rect(col[0], col[1], abs(col[0] - col[2]),
-                           abs(col[1] - col[3]), col[4])
+                for i in range(col[0],col[2],8):
+                    for j in range(col[1],col[3],8):
+                        pyxel.blt(i,j,0, col[4],0, 8, 8)
+                
 
             # draw tir
             for tir in self.tirs:
                 if tir[3] == False:
-                    pyxel.rect(tir[0], tir[1], 4, 1, 10)
+                    coef = pyxel.frame_count //8% 2
+                    pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
+                    
                 else:
                     pyxel.rect(tir[0], tir[1] - 2, 1, 4, 10)
 
             # draw tirs ennemi
             for tir in self.tirs_ennemi:
                 if self.tirs_ennemi != None:
-                    pyxel.rect(tir[0], tir[1], 4, 1, 12)
+                    coef = pyxel.frame_count //8% 2
+                    pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
 
             # draw tirs chargés
             for g in self.g_tirs:
@@ -660,7 +673,8 @@ class App:
 
             # draw perso
             if self.touche == False:
-                pyxel.rect(self.x, self.y, 8, 8, 9)
+                pyxel.blt(self.x, self.y, 0,0,48,8,8,colkey=0)
+                #pyxel.rect(self.x, self.y, 8, 8, 9)
             else:
                 pyxel.rect(self.x, self.y, 8, 8, 8)
 
@@ -668,17 +682,24 @@ class App:
 
             for ennemi in self.ennemis[self.numero_niveau]:
                 if ennemi[4] == False:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 14)
-                elif ennemi[4] == True:
-                    pyxel.rect(ennemi[0], ennemi[1], 8, 8, 11)
+                    coef = pyxel.frame_count //4% 2
+                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                    pyxel.blt(ennemi[0], ennemi[1], 0,0 + 8*coef, 24, 8,8,colkey=0)
+                #elif ennemi[4] == True:
+                #    pyxel.blt(ennemi[0], ennemi[1]-2, 0,8, 16, 8,10)
 
             # draw explosion
             for explosion in self.explosions:
                 pyxel.circb(explosion[0] + 4, explosion[1] + 4, 2 * (explosion[2] // 4), 8 + explosion[2] % 3)
 
             #affiche la vie
-            pyxel.rect(0,0,30,7, 13)
-            pyxel.text(1, 1, 'VIES:' + str(self.vies), 7)
+            
+            for i in range(self.vies):
+                
+                pyxel.blt(i*10, 128, 0,0,40,8,8,colkey=0)
+                
+            #affiche le niveau :
+            pyxel.text(2,140,"NIVEAU "+str(self.numero_niveau+1),7)
 
         elif self.vies <=0:
             pyxel.cls(0)
