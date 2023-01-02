@@ -49,58 +49,58 @@ class App:
                         [48, 85, 120, 93, 24],
                         [28, 70, 50, 78, 24]]
 
-        self.niveau2 = [[24, 0, 128, 8, 56],  # bord Haut
-                        [-8, 16, 8, 110, 48],  # bord Gauche
-                        [0, 120, 128, 128, 32],  # bord Bas
-                        [120, 8, 128, 128, 40],  # bord droit
-                        [50, 50, 80, 58, 64],
-                        [40, 94, 100, 102, 64],
-                        [8, 70, 16, 110, 64],
-                        [70, 8, 90, 24, 64],
-                        [104, 70, 120, 78, 64],
-                        [30, 30, 100, 38, 64]]
+        self.niveau2 = [[24, 0, 128, 8, 0],  # bord Haut
+                        [-8, 16, 8, 110, 8],  # bord Gauche
+                        [0, 120, 128, 128, 24],  # bord Bas
+                        [120, 8, 128, 128, 16],  # bord droit
+                        [50, 50, 80, 58, 24],
+                        [40, 94, 100, 102, 24],
+                        [8, 70, 16, 110, 24],
+                        [70, 8, 90, 24, 24],
+                        [104, 70, 120, 78, 24],
+                        [30, 30, 100, 38, 24]]
 
-        self.niveau3 = [[24, 0, 128, 8, 8],  # bord Haut
+        self.niveau3 = [[24, 0, 128, 8, 0],  # bord Haut
                         [0, 16, 8, 120, 8],  # bord Gauche
-                        [0, 120, 128, 128, 8],  # bord Bas
-                        [120, 8, 128, 112, 8],  # bord droit
-                        [50, 8, 58, 58, 8],
-                        [50, 100, 100, 108, 8],
-                        [92, 84, 128, 92, 8],
-                        [8, 32, 24, 40, 8],
-                        [42, 50, 58, 58, 8],
-                        [8, 72, 60, 80, 8],
-                        [80, 50, 128, 58, 8]]
+                        [0, 120, 128, 128, 24],  # bord Bas
+                        [120, 8, 128, 112, 16],  # bord droit
+                        [50, 8, 58, 58, 24],
+                        [50, 100, 100, 108, 24],
+                        [92, 84, 128, 92, 24],
+                        [8, 32, 24, 40, 24],
+                        [42, 50, 58, 58, 24],
+                        [8, 72, 60, 80, 24],
+                        [80, 50, 128, 58, 24]]
 
-        self.niveau4 = [[0, 0, 108, 8, 10],  # bord Haut
-                        [0, 8, 8, 120, 10],  # bord Gauche
-                        [0, 120, 60, 128, 10],  # bord Bas
-                        [76, 120, 128, 128, 10],  # bord Bas
-                        [120, 16, 128, 128, 10],
-                        [50, 100, 74, 108, 10],
-                        [56, 8, 64, 32, 10],
-                        [0, 56, 64, 64, 10],
-                        [100, 80, 128, 88, 10],
-                        [56, 64, 80, 72, 10],
-                        [24, 32, 100, 40, 10]]
+        self.niveau4 = [[0, 0, 108, 8, 0],  # bord Haut
+                        [0, 8, 8, 120, 16],  # bord Gauche
+                        [0, 120, 60, 128, 24],  # bord Bas
+                        [76, 120, 128, 128, 24],  # bord Bas
+                        [120, 16, 128, 128, 16],
+                        [50, 100, 74, 108, 24],
+                        [56, 8, 64, 32, 16],
+                        [0, 56, 64, 64, 24],
+                        [100, 80, 128, 88, 24],
+                        [56, 64, 80, 72, 24],
+                        [24, 32, 100, 40, 24]]
 
-        self.niveau5 = [[0, 0, 128, 8, 11],  # bord Haut
-                        [0, 8, 8, 32, 11],  # bord Gauche
-                        [120, 8, 128, 128, 11],  # bord Gauche
-                        [0, 48, 8, 128, 11],
-                        [0, 120, 128, 128, 11],  # bord Bas
-                        [120, 0, 128, 128, 11],
-                        [60, 100, 76, 108, 11],
-                        [0, 48, 40, 56, 11],
-                        [70, 8, 90, 48, 11],
-                        [60, 60, 120, 68, 11],
-                        [100, 80, 128, 88, 11],
-                        [8, 80, 32, 110, 11]]
+        self.niveau5 = [[0, 0, 128, 8, 0],  # bord Haut
+                        [0, 8, 8, 32, 16],  # bord Gauche
+                        [120, 8, 128, 128, 16],  # bord Gauche
+                        [0, 48, 8, 128, 16],
+                        [0, 120, 128, 128, 24],  # bord Bas
+                        [120, 0, 128, 128, 16],
+                        [60, 100, 76, 108, 24],
+                        [8, 48, 40, 56, 24],
+                        [70, 8, 90, 48, 16],
+                        [60, 60, 120, 68, 24],
+                        [100, 80, 120, 88, 24],
+                        [8, 80, 32, 110, 16]]
 
         self.level = [self.niveau1, self.niveau2,
                       self.niveau3, self.niveau4, self.niveau5]
-        self.numero_niveau = 0
-        self.niveau = self.niveau1
+        self.numero_niveau = 4
+        self.niveau = self.niveau5
         self.music = True
         if self.music == True:
             pyxel.playm(0, loop=True)
@@ -642,7 +642,7 @@ class App:
             # draw tir
             for tir in self.tirs:
                 if tir[3] == False:
-                    coef = pyxel.frame_count //8% 2
+                    coef = pyxel.frame_count //8% 4
                     pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
                     
                 else:
@@ -668,12 +668,22 @@ class App:
 
                 elif self.droite == True:
                     pyxel.rect(self.x + 8, self.y + 3, 8, 2, 9)
+                    coef = pyxel.frame_count //4% 2
+                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                    #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
+                    pyxel.blt(self.x, self.y, 0,0+8*coef,56,8,8,colkey=0)
                 else:
-                    pyxel.rect(self.x - 8, self.y + 3, 8, 2, 9)
+                    coef = pyxel.frame_count //4% 2
+                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                    #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
+                    pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
 
             # draw perso
             if self.touche == False:
-                pyxel.blt(self.x, self.y, 0,0,48,8,8,colkey=0)
+                coef = pyxel.frame_count //4% 2
+                #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
+                pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
                 #pyxel.rect(self.x, self.y, 8, 8, 9)
             else:
                 pyxel.rect(self.x, self.y, 8, 8, 8)
@@ -682,9 +692,14 @@ class App:
 
             for ennemi in self.ennemis[self.numero_niveau]:
                 if ennemi[4] == False:
-                    coef = pyxel.frame_count //4% 2
-                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
-                    pyxel.blt(ennemi[0], ennemi[1], 0,0 + 8*coef, 24, 8,8,colkey=0)
+                    if ennemi[7]==False :
+                        coef = pyxel.frame_count //4% 2
+                        #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                        pyxel.blt(ennemi[0], ennemi[1], 0,0 + 8*coef, 24, 8,8,colkey=0)
+                    if ennemi[7]==True :
+                        coef = pyxel.frame_count //4% 2
+                        #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
+                        pyxel.blt(ennemi[0], ennemi[1], 0,0 + 8*coef, 32, 8,8,colkey=0)
                 #elif ennemi[4] == True:
                 #    pyxel.blt(ennemi[0], ennemi[1]-2, 0,8, 16, 8,10)
 
