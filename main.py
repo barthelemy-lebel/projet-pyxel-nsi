@@ -8,9 +8,11 @@ class App:
         pyxel.init(128, 148, "PYXEL1", 30)
         pyxel.load("musik.pyxres")
         pyxel.load("graphismes.pyxres")
+        #pyxel.load("fond.jpeg")
         self.x = 60
         self.y = 100
         self.direction = None
+        self.tir=False
         self.saut = False
         self.c_saut = 0
         self.sol = self.y + 8
@@ -35,6 +37,7 @@ class App:
         self.zone = 1  # stocke le numéro du niveau
         # compteur d'ennemis morts // à réinitianliser à chaque changement de niveau normalement
         self.ennemi_ded = 0
+        self.carte=0
 
         self.hell_niveau1 = [[112, 60], [100, 104]]
         self.niveau1 = [[0, 0, 108, 8, 0],  # bord Haut
@@ -99,8 +102,13 @@ class App:
 
         self.level = [self.niveau1, self.niveau2,
                       self.niveau3, self.niveau4, self.niveau5]
-        self.numero_niveau = 4
-        self.niveau = self.niveau5
+        self.coords_carte=[]
+        for i in range(random.randint(4,8)):
+            carte=[random.randint(0,4),random.randint(16,112),random.randint(16,112)]
+            self.coords_carte.append(carte)
+        
+        self.numero_niveau = 2
+        self.niveau = self.niveau3
         self.music = True
         if self.music == True:
             pyxel.playm(0, loop=True)
@@ -193,7 +201,7 @@ class App:
             self.ennemi_ded = 0
 
         # passage 4 -> 3
-        elif 60 <= self.x <= 76 and self.y >= 128 and self.numero_niveau == 3:
+        elif 0 <= self.x <= 128 and self.y >= 120 and self.numero_niveau == 3:
             self.x = 0
             self.y = 0
             self.numero_niveau -= 1
@@ -218,6 +226,14 @@ class App:
 
         self.niveau = self.level[self.numero_niveau]
         
+        for carte in self.coords_carte:
+            if self.x+8>=carte[1] and self.y+8>=carte[2] and self.x-8<=carte[1] and self.y-8<=carte[2] and self.numero_niveau==carte[0]:
+                self.coords_carte.remove(carte)
+                self.carte+=1
+                
+                
+                    
+        
         
     
         
@@ -231,11 +247,13 @@ class App:
             self.direction = "right"
             self.droite = True
             self.test_collision(2, 0)
+            self.direction="right"
 
         if pyxel.btn(pyxel.KEY_LEFT):
             self.direction = "left"
             self.droite = False
             self.test_collision(-2, 0)
+            self.direction="left"
 
         if pyxel.btn(pyxel.KEY_UP):
             self.direction = "up"
@@ -256,6 +274,9 @@ class App:
 
         if not pyxel.btnp(pyxel.KEY_UP, 1, 1):
             self.haut = False
+            
+        if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_RIGHT):
+            self.direction=None
 
     def sauter(self, saut, sol):
         """
@@ -313,7 +334,7 @@ class App:
         """
 
         if pyxel.btnp(pyxel.KEY_SHIFT, 7, 7):
-
+            self.tir=True
             if self.haut == True:
                 self.tirs.append(
                     [self.x + 4, self.y, self.droite, self.haut, False])
@@ -323,7 +344,7 @@ class App:
             else:
                 self.tirs.append(
                     [self.x - 2, self.y + 4, self.droite, self.haut, False])
-
+        self.tir=False
     def tirs_deplacement(self):
         """
         diminue l'ordonnée de tir si tir[3] = True (enlève tir si self.
@@ -637,6 +658,8 @@ class App:
                 for i in range(col[0],col[2],8):
                     for j in range(col[1],col[3],8):
                         pyxel.blt(i,j,0, col[4],0, 8, 8)
+                        
+            
                 
 
             # draw tir
@@ -660,7 +683,7 @@ class App:
                     pyxel.rect(g[0], g[1], 4, 1, 11)
                 else:
                     pyxel.rect(g[0], g[1] - 2, 1, 4, 11)
-
+            
             # draw epee
             if self.epee[1] != 0:
                 if self.haut == True:
@@ -683,7 +706,19 @@ class App:
                 coef = pyxel.frame_count //4% 2
                 #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
                 #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
-                pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
+                if self.direction=="left":
+                    pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
+                
+                if self.direction=="left" and self.tir==True:
+                    pyxel.blt(self.x, self.y, 0,16,56,8,8,colkey=0)
+                    
+                    
+                if self.direction=="right":
+                    pyxel.blt(self.x, self.y, 0,0+8*coef,56,8,8,colkey=0)
+                    
+                if self.direction==None:
+                    pyxel.blt(self.x, self.y, 0,16+8*coef,48,8,8,colkey=0)
+                    
                 #pyxel.rect(self.x, self.y, 8, 8, 9)
             else:
                 pyxel.rect(self.x, self.y, 8, 8, 8)
@@ -715,10 +750,42 @@ class App:
                 
             #affiche le niveau :
             pyxel.text(2,140,"NIVEAU "+str(self.numero_niveau+1),7)
+            
+            pyxel.blt(60,140,0,8,40,8,8,colkey=0)
+            pyxel.text(70,140,":"+str(self.carte),7)
+            
+            #draw cartes :
+            for carte in self.coords_carte:
+                if carte[0]==self.numero_niveau:
+                    pyxel.blt(carte[1],carte[2],0,8,40,8,8,colkey=0)
+                    
+            if len(self.coords_carte)==0:
+                pyxel.cls(0)
+                pyxel.blt(60,50, 0,0,72,72,8,colkey=0)
+                self.niveau=self.niveau5
+                for col in self.niveau:
+                    for i in range(col[0],col[2],8):
+                        for j in range(col[1],col[3],8):
+                            pyxel.blt(i,j,0, col[4],0, 8, 8)
+                    
 
         elif self.vies <=0:
             pyxel.cls(0)
-            pyxel.text(50, 64, 'GAME OVER', 7)
+            
+            pyxel.blt(40,32, 0,0,64,72,8,colkey=0)
+            
+            
+            self.niveau=self.niveau1
+            for col in self.niveau:
+                for i in range(col[0],col[2],8):
+                    for j in range(col[1],col[3],8):
+                        pyxel.blt(i,j,0, col[4],0, 8, 8)
+                        
+                        
+        
+            
+                        
+            
 
 
 class Ennemi:
