@@ -1,5 +1,3 @@
-# projet-pyxel-nsi
-Fedi, Titouan, Maelys, Barthélémy
-
-# Principes :
-Platformer castle vania réalisé avec la biblihotheque python pyxel
+## **PROJET TERMINALE NSI 2022/2023**
+C'est un jeux sur le principe de Metroid Vania s'inspirant du jeux Celeste.
+Il a été entierement réalisé en python à l'aide de la librairie [pyxel](https://github.com/kitao/pyxel) permettant la realisation de jeux en pyxel-art
