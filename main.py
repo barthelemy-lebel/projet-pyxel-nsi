@@ -255,10 +255,10 @@ class App:
             self.test_collision(-2, 0)
             self.direction="left"
 
-        if pyxel.btn(pyxel.KEY_UP):
+        """if pyxel.btn(pyxel.KEY_UP):
             self.direction = "up"
             self.haut = True
-            self.test_collision(0, -1)
+            self.test_collision(0, -1)"""
 
         if pyxel.btn(pyxel.KEY_SPACE) and self.y == self.sol:
 
@@ -269,14 +269,17 @@ class App:
         if ok_saut == True:
             self.saut = True
 
-        if pyxel.btnp(pyxel.KEY_UP, 1, 1):
-            self.haut = True
-
+        """if pyxel.btnp(pyxel.KEY_UP, 1, 1):
+            self.haut = True"""
+            
         if not pyxel.btnp(pyxel.KEY_UP, 1, 1):
             self.haut = False
             
-        if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_RIGHT):
-            self.direction=None
+        if pyxel.btnr(pyxel.KEY_LEFT) :
+            self.direction="stop_left"
+        if pyxel.btnr(pyxel.KEY_RIGHT):
+            self.direction="stop_right"
+            
 
     def sauter(self, saut, sol):
         """
@@ -335,10 +338,8 @@ class App:
 
         if pyxel.btnp(pyxel.KEY_SHIFT, 7, 7):
             self.tir=True
-            if self.haut == True:
-                self.tirs.append(
-                    [self.x + 4, self.y, self.droite, self.haut, False])
-            elif self.droite == True:
+            
+            if self.droite == True:
                 self.tirs.append(
                     [self.x + 4, self.y + 4, self.droite, self.haut, False])
             else:
@@ -677,29 +678,9 @@ class App:
                     coef = pyxel.frame_count //8% 2
                     pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
 
-            # draw tirs chargés
-            for g in self.g_tirs:
-                if g[3] == False:
-                    pyxel.rect(g[0], g[1], 4, 1, 11)
-                else:
-                    pyxel.rect(g[0], g[1] - 2, 1, 4, 11)
             
-            # draw epee
-            if self.epee[1] != 0:
-                if self.haut == True:
-                    pyxel.rect(self.x + 3, self.y - 10, 2, 10, 9)
-
-                elif self.droite == True:
-                    pyxel.rect(self.x + 8, self.y + 3, 8, 2, 9)
-                    coef = pyxel.frame_count //4% 2
-                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
-                    #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
-                    pyxel.blt(self.x, self.y, 0,0+8*coef,56,8,8,colkey=0)
-                else:
-                    coef = pyxel.frame_count //4% 2
-                    #pyxel.blt(self.x, self.y, 0, 0, 8 + 8*coef, 8, 8) 
-                    #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
-                    pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
+            
+            
 
             # draw perso
             if self.touche == False:
@@ -708,18 +689,29 @@ class App:
                 #pyxel.blt(tir[0], tir[1]-5,0,8+8*coef,16,8,8,colkey=0)
                 if self.direction=="left":
                     pyxel.blt(self.x, self.y, 0,0+8*coef,48,8,8,colkey=0)
-                
+                    
                 if self.direction=="left" and self.tir==True:
                     pyxel.blt(self.x, self.y, 0,16,56,8,8,colkey=0)
+                
+                if self.direction=="stop_left" :
+                    pyxel.blt(self.x, self.y, 0,16,56,8,8,colkey=0)
                     
-                    
+                  
                 if self.direction=="right":
                     pyxel.blt(self.x, self.y, 0,0+8*coef,56,8,8,colkey=0)
                     
-                if self.direction==None:
-                    pyxel.blt(self.x, self.y, 0,16+8*coef,48,8,8,colkey=0)
+                if self.direction=="right" and self.tir==True:
+                    pyxel.blt(self.x, self.y, 0,24,56,8,8,colkey=0)                     
+                
                     
-                #pyxel.rect(self.x, self.y, 8, 8, 9)
+                if self.direction=="stop_right" :
+                    pyxel.blt(self.x, self.y, 0,24,56,8,8,colkey=0)
+                    
+                if self.direction==None:
+                    pyxel.blt(self.x, self.y, 0,16,48,8,8,colkey=0)
+                    
+                
+                     
             else:
                 pyxel.rect(self.x, self.y, 8, 8, 8)
 
