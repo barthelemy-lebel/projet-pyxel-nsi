@@ -10,10 +10,10 @@ Des personnes agées tentent de vous en empecher.
 ![screenshot du jeux](https://github.com/barthelemy-lebel/projet-pyxel-nsi/blob/preface/jeux.png)
 
 ## **Fonctionnement :**
-Flèches : Déplacement
+Flèches : Déplacement (Gauche, Droite)
 
-Shift : Tirer \n
+Shift : Tirer 
 
-Espace : Sauter \n
+Espace : Sauter 
 
 
