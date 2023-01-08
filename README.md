@@ -7,7 +7,7 @@ Il a été entierement réalisé en python à l'aide de la librairie [pyxel](htt
 
 Vous incarner un geek en quète de carte graphique.
 Des personnes agées tentent de vous en empecher.
-![screenshot du jeux](https://github.com/barthelemy-lebel/projet-pyxel-nsi/jeux.png)
+![screenshot du jeux](https://github.com/barthelemy-lebel/projet-pyxel-nsi/blob/preface/jeux.png)
 
 ## **Fonctionnement :**
 Flèches : Déplacement
