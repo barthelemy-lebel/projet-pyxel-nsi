@@ -229,15 +229,7 @@ class App:
         for carte in self.coords_carte:
             if self.x+8>=carte[1] and self.y+8>=carte[2] and self.x-8<=carte[1] and self.y-8<=carte[2] and self.numero_niveau==carte[0]:
                 self.coords_carte.remove(carte)
-                self.carte+=1
-                
-                
-                    
-        
-        
-    
-        
-            
+                self.carte+=1            
 
     def deplacement(self):
 
